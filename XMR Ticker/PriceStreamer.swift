@@ -107,7 +107,8 @@ class PriceStreamer
                 {                    
                     self.quote.terms = .usd
                     self.quote.notional = (Double)(jsonResponse["USDT_XMR"]!["last"]! as! String? ?? "0.00")!
-
+                    //rounding for USD
+                    self.quote.notional = (Double)(round(100*self.quote.notional)/100)+0.01
                 }
                 else if(self.terms == .btc)
                 {

@@ -155,7 +155,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
                     self.statusBarItem.title = "ɱ $\(updatedPrice.notional)"
                 }
                 else{
-                    self.statusBarItem.title = "USD/XMR \(updatedPrice.notional)"
+                    self.statusBarItem.title = "USD/XMR $\(updatedPrice.notional)"
                 }
             case .btc:
                 if (self.coinSymbolsEnabled == true)
