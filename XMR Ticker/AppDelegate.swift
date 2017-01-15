@@ -11,6 +11,30 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
 
+    
+    
+    
+    //colored symbols settings
+    var coloredSymbolsEnabled = false
+    var historicalQuote = Quote()
+    @IBOutlet weak var coloredSymbolsButton: NSMenuItem!
+    @IBAction func coloredSymbolsButtonClicked(_ sender: NSMenuItem) {
+        if(sender.state  == NSOffState)
+        {
+            self.coloredSymbolsEnabled  = true
+            sender.state = NSOnState
+            self.priceStreamer?.restartStream()
+        }
+        else{
+            self.coloredSymbolsEnabled = false
+            sender.state = NSOffState
+            self.priceStreamer?.restartStream()
+        }
+    }
+    
+    
+    
+    
     //coin symbols settings
     var coinSymbolsEnabled = false
     @IBOutlet weak var coinSymbolButton: NSMenuItem!
@@ -109,6 +133,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
         self.statusBarItem.title = "XMR Ticker"
         self.priceStreamer = PriceStreamer(delegate:self)
         self.priceStreamer?.startStream()
+        let notificationName = Notification.Name("AppleInterfaceThemeChangedNotification")
+        DistributedNotificationCenter.default().addObserver(self, selector: #selector(colorModeChange), name:notificationName, object: nil)
+
+    }
+    
+    func colorModeChange ()
+    {
+        self.priceStreamer?.restartStream()
     }
 
     //delegate callback for price update
@@ -134,8 +166,54 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
                     self.statusBarItem.title = "BTC/XMR \(updatedPrice.notional)"
                 }
             }
+            self.setAppropriateTextColor(updatedPrice)
         })
     }
+    
+    func setAppropriateTextColor(_ currentQuote: Quote)
+    {
+        let attribute = NSMutableAttributedString.init(string: self.statusBarItem.title!)
+        let appearance = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+        if (self.coloredSymbolsEnabled)
+        {
+
+            if(self.historicalQuote.notional > currentQuote.notional)
+            {
+                attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.red , range: NSMakeRange(0, attribute.length))
+            }
+            else if(self.historicalQuote.notional < currentQuote.notional)
+            {
+                attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.green , range: NSMakeRange(0, attribute.length))
+            }
+            else
+            {
+                if (appearance == "Light")
+                {
+                    attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.black , range: NSMakeRange(0, attribute.length))
+                }
+                else
+                {
+                    attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.white , range: NSMakeRange(0, attribute.length))
+                }
+            }
+        }
+        else
+        {
+            if (appearance == "Light")
+            {
+                attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.black , range: NSMakeRange(0, attribute.length))
+            }
+            else
+            {
+                attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.white , range: NSMakeRange(0, attribute.length))
+            }
+        }
+        self.statusBarItem.attributedTitle = attribute
+        self.historicalQuote.notional = currentQuote.notional
+        self.historicalQuote.terms = currentQuote.terms
+    }
+    
+
     
     @IBAction func quit(_ sender: Any) {
         self.priceStreamer?.stopStream()

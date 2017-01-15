@@ -16,6 +16,7 @@
             <connections>
                 <outlet property="btcTermsButton" destination="VpT-Ti-q1I" id="M7H-v9-IK0"/>
                 <outlet property="coinSymbolButton" destination="lsh-yy-Wmu" id="tvm-g9-xhp"/>
+                <outlet property="coloredSymbolsButton" destination="M26-bh-nlZ" id="8Ah-uh-aAE"/>
                 <outlet property="fifteenSecondFreqButton" destination="XdZ-0f-7UE" id="Uaz-I3-L2G"/>
                 <outlet property="sixtySecondFreqButton" destination="LdP-E2-Ahm" id="M1Q-AT-WP7"/>
                 <outlet property="thirtySecondFreqButton" destination="NOh-3p-KO0" id="gnO-c2-YdF"/>
@@ -39,6 +40,9 @@
                             </menuItem>
                             <menuItem title="Use Colored Symbols" id="M26-bh-nlZ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="coloredSymbolsButtonClicked:" target="Voe-Tx-rLC" id="Rdv-g4-M8y"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Terms" id="frt-1Y-aAN">
                                 <modifierMask key="keyEquivalentModifierMask"/>
