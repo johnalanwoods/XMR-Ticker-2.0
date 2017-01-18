@@ -9,36 +9,17 @@
 import Cocoa
 
 @NSApplicationMain
+//adhere to delegate protocol as PriceListener
 class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
 
-    
-    
-    
-    //colored symbols settings
-    var coloredSymbolsEnabled = false
+    //store last quote
     var historicalQuote = Quote()
-    @IBOutlet weak var coloredSymbolsButton: NSMenuItem!
-    @IBAction func coloredSymbolsButtonClicked(_ sender: NSMenuItem) {
-        if(sender.state  == NSOffState)
-        {
-            self.coloredSymbolsEnabled  = true
-            sender.state = NSOnState
-            self.priceStreamer?.restartStream()
-        }
-        else{
-            self.coloredSymbolsEnabled = false
-            sender.state = NSOffState
-            self.priceStreamer?.restartStream()
-        }
-    }
-    
-    
-    
     
     //coin symbols settings
     var coinSymbolsEnabled = false
     @IBOutlet weak var coinSymbolButton: NSMenuItem!
     @IBAction func coinSymbolButtonClicked(_ sender: NSMenuItem) {
+        print("XMR Ticker \(NSDate()): coin symbols toggled")
         if(sender.state  == NSOffState)
         {
             self.coinSymbolsEnabled  = true
@@ -52,6 +33,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
         }
     }
     
+    //colored symbols settings
+    var coloredSymbolsEnabled = false
+    @IBOutlet weak var coloredSymbolsButton: NSMenuItem!
+    @IBAction func coloredSymbolsButtonClicked(_ sender: NSMenuItem) {
+        print("XMR Ticker \(NSDate()): color symbols toggled")
+        
+        if(sender.state  == NSOffState)
+        {
+            self.coloredSymbolsEnabled  = true
+            sender.state = NSOnState
+            self.priceStreamer?.restartStream()
+        }
+        else{
+            self.coloredSymbolsEnabled = false
+            sender.state = NSOffState
+            self.priceStreamer?.restartStream()
+        }
+    }
 
     //tip popover
     let tipPopover = NSPopover()
@@ -64,6 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
     
     @IBAction func updateFrequencyChanged(_ sender: NSMenuItem)
     {
+        print("XMR Ticker \(NSDate()): update frequency toggled")
         switch sender.title {
         case "15 Seconds":
             self.priceStreamer?.frequencyInSeconds = 15
@@ -94,6 +94,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
     
     @IBAction func updateTermsChanged(_ sender: NSMenuItem)
     {
+        print("XMR Ticker \(NSDate()): terms toggled")
+
         switch sender.title {
         case "USD":
             self.priceStreamer?.terms = .usd
@@ -112,6 +114,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
     
     
     @IBAction func tipButtonClicked(_ sender: Any) {
+        print("XMR Ticker \(NSDate()): tipping menu toggled")
+
         if (self.tipPopover.contentViewController == nil)
         {
             self.tipPopover.contentViewController = TipViewController(nibName: "TipViewController", bundle: nil)
@@ -129,6 +133,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
 
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        print("XMR Ticker \(NSDate()): application launched")
+
         self.statusBarItem.menu = tickerMenu
         self.statusBarItem.title = "XMR Ticker"
         self.priceStreamer = PriceStreamer(delegate:self)
@@ -140,6 +146,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
     
     func colorModeChange ()
     {
+        print("XMR Ticker \(NSDate()): OS level color toggled")
         self.priceStreamer?.restartStream()
     }
 
@@ -208,6 +215,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
                 attribute.addAttribute(NSForegroundColorAttributeName, value: NSColor.white , range: NSMakeRange(0, attribute.length))
             }
         }
+        
+        //print(Unmanaged.passUnretained(historicalQuote).toOpaque())
+
         self.statusBarItem.attributedTitle = attribute
         self.historicalQuote.notional = currentQuote.notional
         self.historicalQuote.terms = currentQuote.terms
@@ -217,6 +227,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener {
     
     @IBAction func quit(_ sender: Any) {
         self.priceStreamer?.stopStream()
+        print("XMR Ticker \(NSDate()): terminating application")
         NSApplication.shared().terminate(self)
     }
 

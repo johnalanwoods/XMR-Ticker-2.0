@@ -9,12 +9,19 @@
 import Cocoa
 
 class TipViewController: NSViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
+    
+    @IBOutlet weak var copyAddressButton: NSButton!
+    @IBOutlet weak var moneroTipAddress: NSTextField!
+    
+    @IBAction func copyAddressButtonClicked(_ sender: NSButtonCell) {
+        NSPasteboard.general().clearContents()
+        NSPasteboard.general().setString(self.moneroTipAddress.stringValue, forType:NSPasteboardTypeString)
+        self.copyAddressButton.title = "Done!"
     }
     
-    
+    override func viewWillAppear()
+    {
+        self.copyAddressButton.title = "Copy Address"
+    }
 
 }

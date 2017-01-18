@@ -24,6 +24,7 @@ class PriceStreamer
     //terms default to USD
     var terms:Terms = .usd {
         didSet {
+            print("XMR Ticker \(NSDate()): terms changed")
             self.restartStream()
         }
     }
@@ -32,6 +33,7 @@ class PriceStreamer
     var updateTimer:Timer?
     var frequencyInSeconds:Double = 30 {
         didSet {
+            print("XMR Ticker \(NSDate()): frequency changed")
             self.restartStream()
         }
     }
@@ -45,6 +47,7 @@ class PriceStreamer
     //init
     init(delegate:PriceListener?)
     {
+        print("XMR Ticker \(NSDate()): streamer init")
         self.delegate = delegate
     }
     convenience init()
@@ -54,6 +57,7 @@ class PriceStreamer
     
     //start streaming prices
     func startStream(){
+        print("XMR Ticker \(NSDate()): stream starting")
         //immediately update price
         self.priceFetch()
         //set periodic update
@@ -62,14 +66,14 @@ class PriceStreamer
     
     //restart stream (for config changes)
     func restartStream(){
-        print("stream restarting")
+        print("XMR Ticker \(NSDate()): stream restarting")
         self.stopStream()
         self.startStream()
     }
     
     //stop streaming prices
     func stopStream(){
-        print("timer reinit")
+        print("XMR Ticker \(NSDate()): timer restarting")
         self.updateTimer?.invalidate()
         self.updateTimer = nil
     }
@@ -102,7 +106,7 @@ class PriceStreamer
                     print("error trying to convert data to JSON")
                     return
                 }
-                
+                print("XMR Ticker \(NSDate()): new data recieved")
                 if(self.terms == .usd)
                 {                    
                     self.quote.terms = .usd
