@@ -13,8 +13,8 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
 {
     //quote
-    var historicalQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quotetime: NSDate())
-    var currentQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quotetime: NSDate())
+    var historicalQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
+    var currentQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
 
     //trend settings
     enum Trend {

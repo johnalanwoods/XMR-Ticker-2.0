@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class Trigger:
+class Trigger
 {
     enum BaseCurrency{
         case xmr //monero
