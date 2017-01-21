@@ -12,6 +12,10 @@ import Cocoa
 //adhere to delegate protocol as PriceListener
 class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
 {
+    
+    //global array of triggers
+    var triggerList:[Trigger] = [Trigger]()
+    
     //quote
     var historicalQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
     var currentQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
@@ -155,6 +159,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
             self.triggerPopover.contentViewController = TriggerViewController(nibName: "TriggerViewController", bundle: nil)
             self.triggerPopover.behavior = .transient
         }
+        let triggerController = self.triggerPopover.contentViewController as? TriggerViewController
+        triggerController?.localTriggerList = self.triggerList
         self.triggerPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
     }
     
@@ -262,6 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
                 }
             }
             self.setAppropriateTextColor(updatedPriceString)
+            self.processTriggers()
         })
     }
     
@@ -324,6 +331,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         NSUserNotificationCenter.default.deliver(notification)
     }
 
+    func processTriggers ()
+    {
+        if (self.triggerList.count > 0)
+        {
+            print("XMR Ticker \(NSDate()): Processing triggers")
+        }
+        else
+        {
+            print("XMR Ticker \(NSDate()): No triggers to process")
+
+        }
+    }
     
     @IBAction func quit(_ sender: Any) {
         self.priceStreamer?.stopStream()

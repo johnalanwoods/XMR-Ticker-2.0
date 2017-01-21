@@ -24,7 +24,6 @@ class TipViewController: NSViewController {
     {
         self.copyAddressButton.title = "Copy Address!"
         self.copyAddressButton.isEnabled = true
-
     }
 
 }

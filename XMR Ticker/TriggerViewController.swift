@@ -8,11 +8,25 @@
 
 import Cocoa
 
-class TriggerViewController: NSViewController {
+class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
 
+    @IBOutlet weak var triggerListTableView: NSTableView!
+    
+    var localTriggerList:[Trigger] = [Trigger]()
+
+    
+    
+    @IBAction func doneButtonClicked(_ sender: NSButton) {
+        self.view.window?.close()
+    }
+
+    
     override func viewDidLoad() {
+
         super.viewDidLoad()
         // Do view setup here.
     }
     
+    override func viewWillDisappear() {
+    }
 }
