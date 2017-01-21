@@ -8,38 +8,24 @@
 
 import Foundation
 
-//protocol
-protocol PriceListener:class {
-    func didProcessPriceUpdate(_ updatedPrice:Quote)
+//protocol for listeners
+protocol PriceListener:class
+{
+    func didProcessPriceUpdate(_ updatedPriceStream:Quote)
 }
+extension Double {
+    /// Rounds the double to decimal places value
+    func roundTo(places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+
 
 class PriceStreamer
 {
-    //terms declaration
-    enum Terms {
-        case usd
-        case btc
-    }
-    
-    //terms default to USD
-    var terms:Terms = .usd {
-        didSet {
-            print("XMR Ticker \(NSDate()): terms changed")
-            self.restartStream()
-        }
-    }
-    
-    //update timer
-    var updateTimer:Timer?
-    var frequencyInSeconds:Double = 30 {
-        didSet {
-            print("XMR Ticker \(NSDate()): frequency changed")
-            self.restartStream()
-        }
-    }
-    
     //quote model
-    let quote:Quote = Quote()
+    var quote:Quote?
     
     //delegate
     weak var delegate:PriceListener?
@@ -47,12 +33,24 @@ class PriceStreamer
     //init
     init(delegate:PriceListener?)
     {
-        print("XMR Ticker \(NSDate()): streamer init")
         self.delegate = delegate
+        print("XMR Ticker \(NSDate()): price streamer init")
     }
+    
     convenience init()
     {
         self.init(delegate:nil)
+    }
+    
+    //update timer
+    var updateTimer:Timer?
+    var frequencyInSeconds:Double = 30 {
+        willSet{
+            print("XMR Ticker \(NSDate()): frequency changed to \(newValue)")
+        }
+        didSet {
+            self.restartStream()
+        }
     }
     
     //start streaming prices
@@ -60,7 +58,7 @@ class PriceStreamer
         print("XMR Ticker \(NSDate()): stream starting")
         //immediately update price
         self.priceFetch()
-        //set periodic update
+        //set periodic future update
         self.updateTimer = Timer.scheduledTimer(timeInterval: self.frequencyInSeconds, target: self, selector: #selector(priceFetch), userInfo: nil, repeats: true)
     }
     
@@ -81,53 +79,45 @@ class PriceStreamer
     
     @objc func priceFetch ()
     {
-        // Set up the URL request
+        //set up the URL request
         let poloAPI: String = "https://poloniex.com/public?command=returnTicker"
         guard let url = URL(string: poloAPI) else {
-            print("Error: cannot create URL")
+            print("XMR Ticker \(NSDate()): cannot create URL: \(poloAPI)")
             return
         }
         let urlRequest = URLRequest(url: url)
-        
     
-        // make the request
+        //make the request
         let task = URLSession.shared.dataTask(with: urlRequest, completionHandler:
         {
             (data, response, error) in
             
-            // make sure we got data
+            //make sure we got data
             guard let responseData = data else {
-                print("Error: did not receive data")
+                print("XMR Ticker \(NSDate()): did not receive data")
                 return
             }
-            // parse the result as JSON, since that's what the API provides
+            //parse the result as json, since that's what the API provides
             do {
                 guard let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: AnyObject] else {
-                    print("error trying to convert data to JSON")
+                    print("XMR Ticker \(NSDate()): error trying to convert data to JSON")
                     return
                 }
-                print("XMR Ticker \(NSDate()): new data recieved")
-                if(self.terms == .usd)
-                {                    
-                    self.quote.terms = .usd
-                    self.quote.notional = (Double)(jsonResponse["USDT_XMR"]!["last"]! as! String? ?? "0.00")!
-                    //rounding for USD
-                    self.quote.notional = (Double)(round(100*self.quote.notional)/100)+0.01
-                }
-                else if(self.terms == .btc)
-                {
-                    self.quote.terms = .btc
-                    self.quote.notional = (Double)(jsonResponse["BTC_XMR"]!["last"]! as! String? ?? "0.00")!
-                }
-                self.delegate?.didProcessPriceUpdate(self.quote)
+                
+                var xmrParsedNotionalDictionary:[String:Double] = ["usd": 0.00, "btc": 0.00]
+                
+                //package up dictionary of associated notional values
+                xmrParsedNotionalDictionary["usd"] = (Double)(jsonResponse["USDT_XMR"]!["last"]! as! String? ?? "0.00")?.roundTo(places: 2)
+                xmrParsedNotionalDictionary["btc"] = (Double)(jsonResponse["BTC_XMR"]!["last"]! as! String? ?? "0.00")?.roundTo(places: 6)
+                
+                self.quote = Quote(baseCurrency: .xmr, notionalValues: xmrParsedNotionalDictionary, quoteTime: NSDate())
+                self.delegate?.didProcessPriceUpdate(self.quote ?? Quote(baseCurrency: .err, notionalValues: xmrParsedNotionalDictionary, quoteTime: NSDate()))
             }
             catch  {
-                print("error trying to convert data to JSON")
+                print("XMR Ticker \(NSDate()): error trying to convert data to JSON")
                 return
             }
-            
         });
         task.resume()
     }
-    
 }

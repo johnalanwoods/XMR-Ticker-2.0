@@ -17,11 +17,14 @@ class TipViewController: NSViewController {
         NSPasteboard.general().clearContents()
         NSPasteboard.general().setString(self.moneroTipAddress.stringValue, forType:NSPasteboardTypeString)
         self.copyAddressButton.title = "Done!"
+        self.copyAddressButton.isEnabled = false
     }
     
     override func viewWillAppear()
     {
-        self.copyAddressButton.title = "Copy Address"
+        self.copyAddressButton.title = "Copy Address!"
+        self.copyAddressButton.isEnabled = true
+
     }
 
 }

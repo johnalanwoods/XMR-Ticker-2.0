@@ -9,12 +9,22 @@
 import Foundation
 
 class Quote
-{   //terms declaration
-    enum Terms {
-        case usd
-        case btc
+{
+    enum BaseCurrency{
+        case xmr //monero
+        case btc //bitcoin
+        case usd //us dollar
+        case err //error case
     }
+    var baseCurrency:BaseCurrency?
+    var notionalValues:[String:Double]?
+    var quoteTime:NSDate
     
-    var terms:Terms = .usd
-    var notional:Double = 0.00
+    //init
+    init(baseCurrency:BaseCurrency?, notionalValues:[String:Double]?, quoteTime:NSDate)
+    {
+        self.baseCurrency = baseCurrency
+        self.notionalValues = notionalValues
+        self.quoteTime = NSDate()
+    }
 }
