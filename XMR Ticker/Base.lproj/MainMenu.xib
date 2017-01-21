@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1211" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
     </dependencies>
     <objects>
@@ -22,6 +21,7 @@
                 <outlet property="thirtySecondFreqButton" destination="NOh-3p-KO0" id="gnO-c2-YdF"/>
                 <outlet property="tickerMenu" destination="viT-bl-jPf" id="rbj-ag-paR"/>
                 <outlet property="tipButton" destination="DkP-he-xRP" id="D9O-6f-Dax"/>
+                <outlet property="triggerButton" destination="21V-fW-7jD" id="GDT-w0-qBE"/>
                 <outlet property="usdTermsButton" destination="Yen-te-l99" id="dfG-RK-6d9"/>
             </connections>
         </customObject>
@@ -90,6 +90,12 @@
                             </menuItem>
                         </items>
                     </menu>
+                </menuItem>
+                <menuItem title="Triggers" id="21V-fW-7jD">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="triggerButtonClicked:" target="Voe-Tx-rLC" id="EgC-9T-P09"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Tip" id="DkP-he-xRP">
                     <modifierMask key="keyEquivalentModifierMask"/>

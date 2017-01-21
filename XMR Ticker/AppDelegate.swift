@@ -130,7 +130,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
     //tip popover
     let tipPopover = NSPopover()
     @IBOutlet weak var tipButton: NSMenuItem!
-    
     //tip view
     @IBAction func tipButtonClicked(_ sender: Any) {
         print("XMR Ticker \(NSDate()): tipping menu toggled")
@@ -143,6 +142,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         self.tipPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
     }
 
+
+    //trigger popover
+    let triggerPopover = NSPopover()
+    @IBOutlet weak var triggerButton: NSMenuItem!
+    //trigger view
+    @IBAction func triggerButtonClicked(_ sender: Any) {
+        print("XMR Ticker \(NSDate()): trigger menu toggled")
+        
+        if (self.triggerPopover.contentViewController == nil)
+        {
+            self.triggerPopover.contentViewController = TriggerViewController(nibName: "TriggerViewController", bundle: nil)
+            self.triggerPopover.behavior = .transient
+        }
+        self.triggerPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
+    }
+    
     
     //main status bar control
     let statusBarItem = NSStatusBar.system().statusItem(withLength:NSVariableStatusItemLength) // statusbar

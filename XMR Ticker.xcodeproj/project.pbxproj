@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A609E73D1E33E45300E193DA /* Trigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A609E73C1E33E45300E193DA /* Trigger.swift */; };
+		A609E7401E33E68E00E193DA /* TriggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A609E73E1E33E68E00E193DA /* TriggerViewController.swift */; };
+		A609E7411E33E68E00E193DA /* TriggerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A609E73F1E33E68E00E193DA /* TriggerViewController.xib */; };
 		A662A9581E2AB9790039B5C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A662A9571E2AB9790039B5C4 /* AppDelegate.swift */; };
 		A662A95A1E2AB9790039B5C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A662A9591E2AB9790039B5C4 /* Assets.xcassets */; };
 		A662A95D1E2AB9790039B5C4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A662A95B1E2AB9790039B5C4 /* MainMenu.xib */; };
@@ -39,6 +41,8 @@
 
 /* Begin PBXFileReference section */
 		A609E73C1E33E45300E193DA /* Trigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trigger.swift; sourceTree = "<group>"; };
+		A609E73E1E33E68E00E193DA /* TriggerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriggerViewController.swift; sourceTree = "<group>"; };
+		A609E73F1E33E68E00E193DA /* TriggerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TriggerViewController.xib; sourceTree = "<group>"; };
 		A662A9541E2AB9790039B5C4 /* XMR Ticker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "XMR Ticker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A662A9571E2AB9790039B5C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A662A9591E2AB9790039B5C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				A662A95B1E2AB9790039B5C4 /* MainMenu.xib */,
 				A6FEEE4A1E2BB04E00A34716 /* TipViewController.swift */,
 				A6FEEE4B1E2BB04E00A34716 /* TipViewController.xib */,
+				A609E73E1E33E68E00E193DA /* TriggerViewController.swift */,
+				A609E73F1E33E68E00E193DA /* TriggerViewController.xib */,
 				A6FCA4821E2CAB6500F0E27B /* iconfile.icns */,
 				A662A95E1E2AB9790039B5C4 /* Info.plist */,
 			);
@@ -250,6 +256,7 @@
 				A662A95A1E2AB9790039B5C4 /* Assets.xcassets in Resources */,
 				A6FCA4831E2CAB6500F0E27B /* iconfile.icns in Resources */,
 				A662A95D1E2AB9790039B5C4 /* MainMenu.xib in Resources */,
+				A609E7411E33E68E00E193DA /* TriggerViewController.xib in Resources */,
 				A6FEEE4D1E2BB04E00A34716 /* TipViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A662A9821E2ACEA20039B5C4 /* Quote.swift in Sources */,
+				A609E7401E33E68E00E193DA /* TriggerViewController.swift in Sources */,
 				A662A9831E2ACEA20039B5C4 /* PriceStreamer.swift in Sources */,
 				A6FEEE4C1E2BB04E00A34716 /* TipViewController.swift in Sources */,
 				A609E73D1E33E45300E193DA /* Trigger.swift in Sources */,
