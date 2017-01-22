@@ -9,29 +9,36 @@
 import Foundation
 class Trigger
 {
-    enum BaseCurrency{
-        case xmr //monero
-        case btc //bitcoin
-        case usd //us dollar
-        case err //error case
+    enum BaseCurrency:String {
+        case xmr = "XMR"//monero
+        case btc = "BTC"//bitcoin
+        case usd = "USD"//us dollar
+        case err = "ERR"//error case
     }
-    enum CounterCurrency{
-        case xmr //monero
-        case btc //bitcoin
-        case usd //us dollar
-        case err //error case
+    enum CounterCurrency:String {
+        case xmr = "XMR"//monero
+        case btc = "BTC"//bitcoin
+        case usd = "USD"//us dollar
+        case err = "ERR"//error case
+    }
+    enum Logic:String{
+        case greaterThan = ">"
+        case lessThan = "<"
+        case equalTo = "="
     }
     
     var baseCurrency:BaseCurrency
     var counterCurrency:CounterCurrency
     var triggerValue:Double
     var quoteTime:NSDate
+    var logic:Logic
     
     //init
-    init(baseCurrency:BaseCurrency, counterCurrency:CounterCurrency, triggerValue:Double, quoteTime:NSDate)
+    init(baseCurrency:BaseCurrency, counterCurrency:CounterCurrency, logic:Logic, triggerValue:Double, quoteTime:NSDate)
     {
         self.baseCurrency = baseCurrency
         self.counterCurrency = counterCurrency
+        self.logic = logic
         self.triggerValue = triggerValue
         self.quoteTime = NSDate()
     }

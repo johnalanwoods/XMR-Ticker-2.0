@@ -7,7 +7,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TriggerViewController" customModule="XMR_Ticker" customModuleProvider="target">
             <connections>
+                <outlet property="triggerCurrencyBox" destination="Doz-a0-PUT" id="cuB-eo-zo0"/>
                 <outlet property="triggerListTableView" destination="8wt-0q-IZk" id="2no-YP-YkC"/>
+                <outlet property="triggerLogicSegmentedControl" destination="jZN-fP-slb" id="sM9-2L-iH3"/>
+                <outlet property="triggerValueTextField" destination="dOn-BN-2Gs" id="yel-ft-QSC"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -41,7 +44,7 @@
                 <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dOn-BN-2Gs">
                     <rect key="frame" x="257" y="328" width="127" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Trigger Value" drawsBackground="YES" id="obl-0Y-UCA">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="0.00" drawsBackground="YES" allowsEditingTextAttributes="YES" id="obl-0Y-UCA">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -50,7 +53,7 @@
                 <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Doz-a0-PUT">
                     <rect key="frame" x="257" y="376" width="130" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" placeholderString="Trigger Currency" drawsBackground="YES" numberOfVisibleItems="5" id="Shc-v3-jjI">
+                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="USD" placeholderString="USD" drawsBackground="YES" numberOfVisibleItems="2" id="Shc-v3-jjI">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -105,11 +108,11 @@
                         <rect key="frame" x="1" y="0.0" width="362" height="270"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="mjP-eP-xcm" viewBased="YES" id="8wt-0q-IZk">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="mjP-eP-xcm" viewBased="YES" id="8wt-0q-IZk">
                                 <rect key="frame" x="0.0" y="0.0" width="362" height="247"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
-                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.90980392156862744" green="0.30196078431372547" blue="0.14509803921568626" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
                                     <tableColumn width="116" minWidth="40" maxWidth="1000" id="Pfy-pF-QKW">
@@ -125,7 +128,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
-                                            <tableCellView id="tNv-Dm-PSP">
+                                            <tableCellView identifier="CurrencyCell" id="tNv-Dm-PSP">
                                                 <rect key="frame" x="1" y="1" width="116" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -158,7 +161,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
-                                            <tableCellView id="Jl3-mW-aDQ">
+                                            <tableCellView identifier="LogicCell" id="Jl3-mW-aDQ">
                                                 <rect key="frame" x="120" y="1" width="125" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -191,7 +194,7 @@
                                         </textFieldCell>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
-                                            <tableCellView id="E5j-Yt-mq2">
+                                            <tableCellView identifier="TriggerCell" id="E5j-Yt-mq2">
                                                 <rect key="frame" x="248" y="1" width="112" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -223,7 +226,7 @@
                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <tableHeaderView key="headerView" id="mjP-eP-xcm">
+                    <tableHeaderView key="headerView" focusRingType="exterior" id="mjP-eP-xcm">
                         <rect key="frame" x="0.0" y="0.0" width="362" height="23"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
@@ -238,6 +241,9 @@
 Gw
 </string>
                     </buttonCell>
+                    <connections>
+                        <action selector="addButtonClicked:" target="-2" id="msn-vT-jdO"/>
+                    </connections>
                 </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kJT-9N-ckc">
                     <rect key="frame" x="95" y="13" width="81" height="32"/>
@@ -246,6 +252,20 @@ Gw
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="removeButtonClicked:" target="-2" id="vfK-0y-c32"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iny-rA-LUp">
+                    <rect key="frame" x="176" y="13" width="81" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Clear" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GQA-K1-4xD">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="clearButtonClicked:" target="-2" id="648-ik-CkG"/>
+                    </connections>
                 </button>
             </subviews>
             <point key="canvasLocation" x="193" y="217"/>

@@ -335,11 +335,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
     {
         if (self.triggerList.count > 0)
         {
-            print("XMR Ticker \(NSDate()): Processing triggers")
+            
         }
         else
         {
-            print("XMR Ticker \(NSDate()): No triggers to process")
 
         }
     }
