@@ -19,10 +19,11 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
     //delegate
     weak var delegate:TriggerArrayReceiver?
     
-    @IBOutlet weak var triggerListTableView: NSTableView!
-
-    
+    //model
     var localTriggerList:[Trigger] = [Trigger]()
+    //tableview
+    @IBOutlet weak var triggerListTableView: NSTableView!
+    //ui elements
     @IBOutlet weak var triggerCurrencyBox: NSComboBox!
     @IBOutlet weak var triggerLogicSegmentedControl: NSSegmentedControl!
     @IBOutlet weak var triggerValueTextField: NSTextField!
@@ -42,15 +43,12 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
             self.triggerListTableView.reloadData()
         }
     }
+    
     @IBAction func doneButtonClicked(_ sender: NSButton) {
-
         self.view.window?.close()
     }
 
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return self.localTriggerList.count
-    }
-    
+
     override func viewDidLoad() {
         self.triggerListTableView.delegate = self
         self.triggerListTableView.dataSource = self
@@ -58,14 +56,18 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         self.triggerValueTextField.delegate = self
         
         super.viewDidLoad()
-        // Do view setup here.
     }
     
     override func viewDidAppear() {
         self.triggerListTableView.reloadData()
     }
     
+    //tableview delegate methods
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return self.localTriggerList.count
+    }
     
+    //fill out tableview
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         
         var cellText: String = ""
@@ -88,9 +90,10 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         return cell
     }
     
-    
+    //create new trigger/alert
     @IBAction func addButtonClicked(_ sender: NSButton) {
 
+        //parse model from ui
         let baseCurrency = Trigger.BaseCurrency.xmr
         var counterCurrency:Trigger.CounterCurrency
         var logic:Trigger.Logic
@@ -103,6 +106,7 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         default:
             counterCurrency = Trigger.CounterCurrency.usd
         }
+        
         switch self.triggerLogicSegmentedControl.label(forSegment: self.triggerLogicSegmentedControl.selectedSegment)! {
         case ">":
             logic = Trigger.Logic.greaterThan
@@ -114,10 +118,12 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
             logic = Trigger.Logic.equalTo
         }
         
-        
+        //create new model
         let trigger = Trigger(baseCurrency: baseCurrency, counterCurrency: counterCurrency, logic: logic, triggerValue: Double(self.triggerValueTextField.stringValue) ?? 0.00, quoteTime: NSDate())
+        //append to model array
         self.localTriggerList.append(trigger)
 
+        //reload tableview
         self.triggerListTableView.reloadData()
         if(self.triggerListTableView.numberOfRows > 0)
         {
@@ -125,10 +131,12 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         }
     }
     
+    //update global array of models in app delegate
     override func viewDidDisappear() {
         self.delegate?.triggerArrayUpdated(self.localTriggerList)
     }
     
+
     override func controlTextDidChange(_ obj: Notification) {
         let charSet = NSCharacterSet(charactersIn: "1234567890.").inverted
         let chars = self.triggerValueTextField.stringValue.components(separatedBy: charSet)
@@ -136,6 +144,3 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
     }
     
 }
-
-
-

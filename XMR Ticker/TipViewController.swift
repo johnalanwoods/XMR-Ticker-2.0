@@ -10,9 +10,11 @@ import Cocoa
 
 class TipViewController: NSViewController {
     
+    //ui elements
     @IBOutlet weak var copyAddressButton: NSButton!
     @IBOutlet weak var moneroTipAddress: NSTextField!
     
+    //make it easy to copy address to pasteboard
     @IBAction func copyAddressButtonClicked(_ sender: NSButtonCell) {
         NSPasteboard.general().clearContents()
         NSPasteboard.general().setString(self.moneroTipAddress.stringValue, forType:NSPasteboardTypeString)
@@ -20,6 +22,7 @@ class TipViewController: NSViewController {
         self.copyAddressButton.isEnabled = false
     }
     
+    //reset button when view appears
     override func viewWillAppear()
     {
         self.copyAddressButton.title = "Copy Address!"

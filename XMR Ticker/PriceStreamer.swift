@@ -14,7 +14,7 @@ protocol PriceListener:class
     func didProcessPriceUpdate(_ updatedPriceStream:Quote)
 }
 extension Double {
-    /// Rounds the double to decimal places value
+    //rounds the double to decimal places value
     func roundTo(places:Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
@@ -49,6 +49,7 @@ class PriceStreamer
             print("XMR Ticker \(NSDate()): frequency changed to \(newValue)")
         }
         didSet {
+            //restart feed on new value for timer
             self.restartStream()
         }
     }
@@ -85,6 +86,7 @@ class PriceStreamer
             print("XMR Ticker \(NSDate()): cannot create URL: \(poloAPI)")
             return
         }
+        
         let urlRequest = URLRequest(url: url)
     
         //make the request

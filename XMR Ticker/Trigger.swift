@@ -7,16 +7,17 @@
 //
 
 import Foundation
+
 class Trigger
 {
     enum BaseCurrency:String {
-        case xmr = "XMR"//monero
+        case xmr = "XMR" //monero
     }
     enum CounterCurrency:String {
-        case btc = "BTC"//bitcoin
-        case usd = "USD"//us dollar
+        case btc = "BTC" //bitcoin
+        case usd = "USD" //us dollar
     }
-    enum Logic:String{
+    enum Logic:String {
         case greaterThan = ">"
         case lessThan = "<"
         case equalTo = "="

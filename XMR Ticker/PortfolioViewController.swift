@@ -15,8 +15,10 @@ protocol PortfolioTrackingListener:class
     func portfolioCoinCountChanged(_ count:Double)
 }
 
+//adhere to nstextfielddelegate to handle alpha input
 class PortfolioViewController: NSViewController, NSTextFieldDelegate {
 
+    //ui elements
     @IBOutlet weak var coinCountTextField: NSTextField!
     @IBOutlet weak var trackingStatusCheckBox: NSButton!
     
@@ -28,6 +30,8 @@ class PortfolioViewController: NSViewController, NSTextFieldDelegate {
         self.coinCountTextField.delegate = self
     }
     override func viewDidDisappear() {
+        //when the view is gone, send back data using delegate
+        
         self.delegate?.portfolioCoinCountChanged(Double(self.coinCountTextField.stringValue) ?? 0.00)
 
         switch self.trackingStatusCheckBox.state {
@@ -40,6 +44,7 @@ class PortfolioViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
+    //ensure no bad (non decimal) data is added to coin count
     override func controlTextDidChange(_ obj: Notification) {
         let charSet = NSCharacterSet(charactersIn: "1234567890.").inverted
         let chars = self.coinCountTextField.stringValue.components(separatedBy: charSet)

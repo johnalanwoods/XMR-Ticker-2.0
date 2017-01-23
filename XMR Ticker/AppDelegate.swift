@@ -17,12 +17,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
     var portfolioIsTracked:Bool = false
     var portfolioCoinCount:Double = 0.00
     
-    //global array of triggers
+    //global array of trigger/alert models
     var triggerList:[Trigger] = [Trigger]()
     var indexesToRemove: [Int] = [Int]()
-
     
-    //quote
+    //quote models - historical and current
     var historicalQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
     var currentQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
 
@@ -102,8 +101,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         self.priceStreamer?.restartStream()
     }
 
-
-    
     //frequecy settings
     @IBOutlet weak var fifteenSecondFreqButton: NSMenuItem!
     @IBOutlet weak var thirtySecondFreqButton: NSMenuItem!
@@ -165,6 +162,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.portfolioPopover.contentViewController = PortfolioViewController(nibName: "PortfolioViewController", bundle: nil)
             self.portfolioPopover.behavior = .transient
         }
+        //set delegate to self
         let portfolioController = self.portfolioPopover.contentViewController as? PortfolioViewController
         portfolioController?.delegate = self
         self.portfolioPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
@@ -185,6 +183,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         }
         let triggerController = self.triggerPopover.contentViewController as? TriggerViewController
         triggerController?.localTriggerList = self.triggerList
+        //set delegate to self
         triggerController?.delegate = self
         self.triggerPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
     }
@@ -216,6 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         self.priceStreamer?.restartStream()
     }
     
+    //helper function to deep copy quote model
     func copyQuote (from: Quote, to: Quote) -> ()
     {
         to.baseCurrency = from.baseCurrency
@@ -234,7 +234,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         self.portfolioCoinCount = count
     }
     
-
     //delegate callback for triggers update
     func triggerArrayUpdated(_ triggers:[Trigger])
     {
@@ -244,10 +243,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
     //delegate callback for price update
     func didProcessPriceUpdate(_ updatedPriceStream:Quote)
     {
-        //save into new
+        //save into new model
         self.copyQuote(from: updatedPriceStream, to: self.currentQuote)
         
-        //check against old
+        //check against old model
         if(self.historicalQuote.notionalValues != nil)
         {
             switch self.displayTerms{
@@ -284,11 +283,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.trend = .neutral
         }
         
-        //save into old
+        //save into old model
         self.copyQuote(from: self.currentQuote, to: self.historicalQuote)
         
         var updatedPriceString:String = String()
         
+        //do ui updates on main thread gcd call
         DispatchQueue.main.async(execute: {
             switch self.displayTerms {
             case .usd:
@@ -310,6 +310,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
                     updatedPriceString = "XMR/BTC \(self.currentQuote.notionalValues!["btc"]!)"
                 }
             }
+            //process new data
             self.setAppropriateTextColor(updatedPriceString)
             self.processTriggers()
             self.processPortfolio()
@@ -390,6 +391,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
 
     func processTriggers ()
     {
+        //process triggers based on array of trigger models
         let title = "XMR Ticker: Alert!"
         if (self.triggerList.count > 0)
         {
@@ -442,19 +444,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
                     }
                 }
             }
+            //remove each triggered alert after sorting indexes from largest to smallest to maintain array integrity
             if(self.indexesToRemove.count > 0)
             {
+                //sort largest to smallest
                 self.indexesToRemove.sort(by: >)
-                for item in self.indexesToRemove
-                {
-                    print("item is \(item)")
-                }
-                print(self.indexesToRemove)
+                //loop through indexes and remove from associated elements from model array
                 for index in self.indexesToRemove
                 {
                     self.triggerList.remove(at: index)
-                    print("removing at position \(index+1)")
                 }
+                //reset array of indexes to remove
                 self.indexesToRemove.removeAll()
             }
         }
