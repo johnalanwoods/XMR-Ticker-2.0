@@ -11,15 +11,10 @@ class Trigger
 {
     enum BaseCurrency:String {
         case xmr = "XMR"//monero
-        case btc = "BTC"//bitcoin
-        case usd = "USD"//us dollar
-        case err = "ERR"//error case
     }
     enum CounterCurrency:String {
-        case xmr = "XMR"//monero
         case btc = "BTC"//bitcoin
         case usd = "USD"//us dollar
-        case err = "ERR"//error case
     }
     enum Logic:String{
         case greaterThan = ">"

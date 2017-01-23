@@ -10,11 +10,17 @@ import Cocoa
 
 @NSApplicationMain
 //adhere to delegate protocol as PriceListener
-class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
+class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayReceiver, PortfolioTrackingListener
 {
+    
+    //portfolio tracking settings
+    var portfolioIsTracked:Bool = false
+    var portfolioCoinCount:Double = 0.00
     
     //global array of triggers
     var triggerList:[Trigger] = [Trigger]()
+    var indexesToRemove: [Int] = [Int]()
+
     
     //quote
     var historicalQuote = Quote(baseCurrency: .xmr, notionalValues: nil, quoteTime: NSDate())
@@ -146,6 +152,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         self.tipPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
     }
 
+    //portfolio popover
+    let portfolioPopover = NSPopover()
+    @IBOutlet weak var portfolioButton: NSMenuItem!
+    //portfolio view
+    @IBAction func portfolioButtonClicked(_ sender: NSMenuItem) {
+        
+        print("XMR Ticker \(NSDate()): portfolio menu toggled")
+        
+        if (self.portfolioPopover.contentViewController == nil)
+        {
+            self.portfolioPopover.contentViewController = PortfolioViewController(nibName: "PortfolioViewController", bundle: nil)
+            self.portfolioPopover.behavior = .transient
+        }
+        let portfolioController = self.portfolioPopover.contentViewController as? PortfolioViewController
+        portfolioController?.delegate = self
+        self.portfolioPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
+    }
 
     //trigger popover
     let triggerPopover = NSPopover()
@@ -157,10 +180,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         if (self.triggerPopover.contentViewController == nil)
         {
             self.triggerPopover.contentViewController = TriggerViewController(nibName: "TriggerViewController", bundle: nil)
+            
             self.triggerPopover.behavior = .transient
         }
         let triggerController = self.triggerPopover.contentViewController as? TriggerViewController
         triggerController?.localTriggerList = self.triggerList
+        triggerController?.delegate = self
         self.triggerPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
     }
     
@@ -197,7 +222,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         to.notionalValues = from.notionalValues
         to.quoteTime = from.quoteTime.copy() as! NSDate
     }
+    
+    //delegate callback for portfolio tracking
+    func portfolioTrackingStatusChanged(_ status:Bool)
+    {
+        self.portfolioIsTracked = status
+        self.priceStreamer?.restartStream()
+    }
+    func portfolioCoinCountChanged(_ count:Double)
+    {
+        self.portfolioCoinCount = count
+    }
+    
 
+    //delegate callback for triggers update
+    func triggerArrayUpdated(_ triggers:[Trigger])
+    {
+        self.triggerList = triggers
+        self.priceStreamer?.restartStream()
+    }
     //delegate callback for price update
     func didProcessPriceUpdate(_ updatedPriceStream:Quote)
     {
@@ -251,25 +294,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
             case .usd:
                 if (self.coinSymbolsEnabled == true)
                 {
-                    updatedPriceString = "ɱ $\(updatedPriceStream.notionalValues!["usd"]!)"
+                    updatedPriceString = "ɱ $\(self.currentQuote.notionalValues!["usd"]!)"
                 }
                 else
                 {
-                    updatedPriceString = "XMR/USD $\(updatedPriceStream.notionalValues!["usd"]!)"
+                    updatedPriceString = "XMR/USD $\(self.currentQuote.notionalValues!["usd"]!)"
                 }
             case .btc:
                 if (self.coinSymbolsEnabled == true)
                 {
-                    updatedPriceString = "ɱ Ƀ\(updatedPriceStream.notionalValues!["btc"]!)"
+                    updatedPriceString = "ɱ Ƀ\(self.currentQuote.notionalValues!["btc"]!)"
                 }
                 else
                 {
-                    updatedPriceString = "XMR/BTC \(updatedPriceStream.notionalValues!["btc"]!)"
+                    updatedPriceString = "XMR/BTC \(self.currentQuote.notionalValues!["btc"]!)"
                 }
             }
             self.setAppropriateTextColor(updatedPriceString)
             self.processTriggers()
+            self.processPortfolio()
         })
+    }
+    
+    func processPortfolio()
+    {
+        if (self.portfolioIsTracked)
+        {
+            let portfolioValue = self.portfolioCoinCount*self.currentQuote.notionalValues!["usd"]!
+            self.portfolioButton.title = "Portfolio ($\(portfolioValue.roundTo(places: 2)))"
+        }
+        else
+        {
+            self.portfolioButton.title = "Portfolio"
+        }
+
     }
     
     func setAppropriateTextColor(_ forText: String)
@@ -309,7 +367,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
         }
         //update the bar
         self.statusBarItem.attributedTitle = attributedString
-        //self.postTriggerNotification(title: "Warning", body: forText)
     }
     
     func postTriggerNotification (title: String, body: String)
@@ -333,13 +390,73 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener
 
     func processTriggers ()
     {
+        let title = "XMR Ticker: Alert!"
         if (self.triggerList.count > 0)
         {
-            
-        }
-        else
-        {
+            for (index, trigger) in self.triggerList.enumerated()
+            {
+                switch trigger.counterCurrency {
+                case .usd:
+                    switch trigger.logic {
+                    case .greaterThan:
+                        if(self.currentQuote.notionalValues!["usd"]! > trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now > \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
+                        }
+                    case .lessThan:
+                        if(self.currentQuote.notionalValues!["usd"]! < trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now < \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
 
+                        }
+                    case .equalTo:
+                        if(self.currentQuote.notionalValues!["usd"]! == trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now = \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
+                        }
+                    }
+                case .btc:
+                    switch trigger.logic {
+                    case .greaterThan:
+                        if(self.currentQuote.notionalValues!["btc"]! > trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now > \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
+                        }
+                    case .lessThan:
+                        if(self.currentQuote.notionalValues!["btc"]! < trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now < \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
+                            
+                        }
+                    case .equalTo:
+                        if(self.currentQuote.notionalValues!["btc"]! == trigger.triggerValue)
+                        {
+                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now = \(trigger.triggerValue). Occured @ \(NSDate())")
+                            indexesToRemove.append(index)
+                        }
+                    }
+                }
+            }
+            if(self.indexesToRemove.count > 0)
+            {
+                self.indexesToRemove.sort(by: >)
+                for item in self.indexesToRemove
+                {
+                    print("item is \(item)")
+                }
+                print(self.indexesToRemove)
+                for index in self.indexesToRemove
+                {
+                    self.triggerList.remove(at: index)
+                    print("removing at position \(index+1)")
+                }
+                self.indexesToRemove.removeAll()
+            }
         }
     }
     

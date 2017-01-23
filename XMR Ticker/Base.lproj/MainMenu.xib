@@ -17,6 +17,7 @@
                 <outlet property="coinSymbolButton" destination="lsh-yy-Wmu" id="tvm-g9-xhp"/>
                 <outlet property="coloredSymbolsButton" destination="M26-bh-nlZ" id="8Ah-uh-aAE"/>
                 <outlet property="fifteenSecondFreqButton" destination="XdZ-0f-7UE" id="Uaz-I3-L2G"/>
+                <outlet property="portfolioButton" destination="9Cv-Df-bEU" id="kIl-mb-2wF"/>
                 <outlet property="sixtySecondFreqButton" destination="LdP-E2-Ahm" id="M1Q-AT-WP7"/>
                 <outlet property="thirtySecondFreqButton" destination="NOh-3p-KO0" id="gnO-c2-YdF"/>
                 <outlet property="tickerMenu" destination="viT-bl-jPf" id="rbj-ag-paR"/>
@@ -91,7 +92,13 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Triggers" id="21V-fW-7jD">
+                <menuItem title="Portfolio" id="9Cv-Df-bEU">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="portfolioButtonClicked:" target="Voe-Tx-rLC" id="f9W-um-lWK"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Alerts" id="21V-fW-7jD">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="triggerButtonClicked:" target="Voe-Tx-rLC" id="EgC-9T-P09"/>

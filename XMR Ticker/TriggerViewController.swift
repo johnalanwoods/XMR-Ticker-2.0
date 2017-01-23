@@ -8,9 +8,17 @@
 
 import Cocoa
 
+//protocol for array pass back
+protocol TriggerArrayReceiver:class
+{
+    func triggerArrayUpdated(_ triggers:[Trigger])
+}
 
 class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSTextFieldDelegate {
 
+    //delegate
+    weak var delegate:TriggerArrayReceiver?
+    
     @IBOutlet weak var triggerListTableView: NSTableView!
 
     
@@ -64,7 +72,7 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         var cellIdentifier: String = ""
 
         if tableColumn == tableView.tableColumns[0] {
-            cellText = self.localTriggerList[row].counterCurrency.rawValue
+            cellText = "XMR/\(self.localTriggerList[row].counterCurrency.rawValue)"
             cellIdentifier = "CurrencyCell"
         } else if tableColumn == tableView.tableColumns[1] {
             cellText = self.localTriggerList[row].logic.rawValue
@@ -80,9 +88,6 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         return cell
     }
     
-    func tableViewSelectionDidChange(_ notification: Notification) {
-
-    }
     
     @IBAction func addButtonClicked(_ sender: NSButton) {
 
@@ -91,9 +96,9 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         var logic:Trigger.Logic
         
         switch self.triggerCurrencyBox.stringValue {
-        case "USD":
+        case let switchString where switchString.contains("USD"):
             counterCurrency = Trigger.CounterCurrency.usd
-        case "BTC":
+        case let switchString where switchString.contains("BTC"):
             counterCurrency = Trigger.CounterCurrency.btc
         default:
             counterCurrency = Trigger.CounterCurrency.usd
@@ -119,8 +124,9 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
             self.triggerListTableView.scrollRowToVisible(self.triggerListTableView.numberOfRows-1)
         }
     }
-    override func viewWillDisappear() {
-        //pass back array
+    
+    override func viewDidDisappear() {
+        self.delegate?.triggerArrayUpdated(self.localTriggerList)
     }
     
     override func controlTextDidChange(_ obj: Notification) {
