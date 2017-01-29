@@ -80,7 +80,13 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
             cellText = self.localTriggerList[row].logic.rawValue
             cellIdentifier = "LogicCell"
         } else if tableColumn == tableView.tableColumns[2] {
-            cellText = "\(self.localTriggerList[row].triggerValue)"
+            if(self.localTriggerList[row].counterCurrency == .btc)
+            {
+                cellText = "\(self.localTriggerList[row].triggerValue) BTC"
+            }
+            else{
+                cellText = "$\(self.localTriggerList[row].triggerValue.string(fractionDigits: 2))"
+            }
             cellIdentifier = "TriggerCell"
         }
         
