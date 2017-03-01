@@ -15,7 +15,7 @@ protocol TriggerArrayReceiver:class
 }
 
 class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSTextFieldDelegate {
-
+    
     //delegate
     weak var delegate:TriggerArrayReceiver?
     
@@ -54,7 +54,6 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         self.triggerListTableView.dataSource = self
         
         self.triggerValueTextField.delegate = self
-        
         super.viewDidLoad()
     }
     
@@ -92,9 +91,10 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
         
         let cell = tableView.make(withIdentifier: cellIdentifier, owner: self) as! NSTableCellView
         cell.textField?.stringValue = cellText
-        cell.textField?.textColor = NSColor.white
+        cell.textField?.textColor = NSColor(red: 232/255.0, green: 77/255.0, blue: 37/255.0, alpha: 1.0)
         return cell
     }
+
     
     //create new trigger/alert
     @IBAction func addButtonClicked(_ sender: NSButton) {

@@ -12,6 +12,8 @@ import Cocoa
 //adhere to delegate protocol as PriceListener
 class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayReceiver, PortfolioTrackingListener
 {
+    //user defaults singleton
+    let defaultSettings = UserDefaults.standard
     
     //portfolio tracking settings
     var portfolioIsTracked:Bool = false
@@ -63,7 +65,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.usdTermsButton.state = NSOnState
             self.btcTermsButton.state = NSOffState
         }
-        self.priceStreamer?.restartStream()
+        if (sender.action != nil)
+        {
+            self.defaultSettings.set(sender.title, forKey: "terms")
+            self.priceStreamer?.restartStream()
+        }
     }
     
     //coin symbols settings
@@ -74,13 +80,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         if(sender.state  == NSOffState)
         {
             self.coinSymbolsEnabled  = true
-            sender.state = NSOnState
+            self.coinSymbolButton.state = NSOnState
         }
         else{
             self.coinSymbolsEnabled = false
-            sender.state = NSOffState
+            self.coinSymbolButton.state = NSOffState
         }
-        self.priceStreamer?.restartStream()
+        if (sender.action != nil)
+        {
+            self.defaultSettings.set(sender.state, forKey: "symbols")
+            self.priceStreamer?.restartStream()
+        }
     }
     
     //colored symbols settings
@@ -92,13 +102,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         if(sender.state  == NSOffState)
         {
             self.coloredSymbolsEnabled  = true
-            sender.state = NSOnState
+            self.coloredSymbolsButton.state = NSOnState
         }
         else{
             self.coloredSymbolsEnabled = false
-            sender.state = NSOffState
+            self.coloredSymbolsButton.state = NSOffState
         }
-        self.priceStreamer?.restartStream()
+        if (sender.action != nil)
+        {
+            self.defaultSettings.set(sender.state, forKey: "colors")
+            self.priceStreamer?.restartStream()
+        }
     }
 
     //frequecy settings
@@ -130,6 +144,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.fifteenSecondFreqButton.state = NSOffState
             self.thirtySecondFreqButton.state = NSOnState
             self.sixtySecondFreqButton.state = NSOffState
+        }
+        if (sender.action != nil)
+        {
+            self.defaultSettings.set(sender.title, forKey: "updateFrequency")
         }
     }
 
@@ -166,6 +184,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         let portfolioController = self.portfolioPopover.contentViewController as? PortfolioViewController
         portfolioController?.delegate = self
         self.portfolioPopover.show(relativeTo: statusBarItem.button!.bounds, of: statusBarItem.button!, preferredEdge: .maxY)
+        portfolioController?.coinCountTextField?.stringValue = "\(self.portfolioCoinCount)"
+        if (self.portfolioIsTracked == true)
+        {
+            portfolioController?.trackingStatusCheckBox.state = 1
+        }
+        else
+        {
+            portfolioController?.trackingStatusCheckBox.state = 0
+        }
     }
 
     //trigger popover
@@ -203,10 +230,77 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         self.statusBarItem.title = "XMR Ticker"
         //perfect alignment adjustment
         self.statusBarItem.button?.frame = CGRect(x:0.0, y:1.0, width:self.statusBarItem.button!.frame.width, height:self.statusBarItem.button!.frame.height)
+        
+        //load saved settings
+        self.restoreSettingsState()
+
+        //start stream
         self.priceStreamer = PriceStreamer(delegate:self)
         self.priceStreamer?.startStream()
+        
+        //register for notifications
         let notificationName = Notification.Name("AppleInterfaceThemeChangedNotification")
         DistributedNotificationCenter.default().addObserver(self, selector: #selector(colorModeChange), name:notificationName, object: nil)
+    }
+    
+    
+    func restoreSettingsState ()
+    {
+        //restore terms
+        if let termsSetting = self.defaultSettings.string(forKey: "terms"){
+            switch termsSetting {
+            case "BTC":
+                self.updateTermsChanged(NSMenuItem(title: "BTC", action: nil, keyEquivalent: ""))
+            default:
+                break
+            }
+        }
+        
+        //restore symbols
+        let symbolSettings = self.defaultSettings.bool(forKey: "symbols")
+        switch symbolSettings {
+        case false:
+            break
+        case true:
+            let enabled = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+            enabled.state = NSOffState
+            self.coinSymbolButtonClicked(enabled)
+        }
+        
+        //restore colors
+        let colorSettings = self.defaultSettings.bool(forKey: "colors")
+        switch colorSettings {
+        case false:
+            break
+        case true:
+            let enabled = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+            enabled.state = NSOffState
+            self.coloredSymbolsButtonClicked(enabled)
+        }
+        
+        //restore frequency
+        if let frequencySettings = self.defaultSettings.string(forKey: "updateFrequency")
+        {
+            switch frequencySettings {
+            case "15 Seconds",
+                 "30 Seconds",
+                 "60 Seconds":
+                let enabled = NSMenuItem(title: frequencySettings, action: nil, keyEquivalent: "")
+                self.updateFrequencyChanged(enabled)
+            default:
+                break
+            }
+        }
+        
+        //restore portfolio
+        self.portfolioIsTracked = self.defaultSettings.bool(forKey: "portfolioTracking")
+        self.portfolioCoinCount = self.defaultSettings.double(forKey: "portfolioCoins")
+
+        //restore triggers
+        if let data = UserDefaults.standard.data(forKey: "triggerList")
+        {
+            self.triggerList = NSKeyedUnarchiver.unarchiveObject(with: data) as! [Trigger]
+        }
     }
     
     func colorModeChange ()
@@ -227,11 +321,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
     func portfolioTrackingStatusChanged(_ status:Bool)
     {
         self.portfolioIsTracked = status
+        self.defaultSettings.set(status, forKey: "portfolioTracking")
         self.priceStreamer?.restartStream()
     }
     func portfolioCoinCountChanged(_ count:Double)
     {
         self.portfolioCoinCount = count
+        self.defaultSettings.set(count, forKey: "portfolioCoins")
     }
     
     //delegate callback for triggers update
@@ -462,6 +558,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
     
     @IBAction func quit(_ sender: Any) {
         self.priceStreamer?.stopStream()
+        let encodedTriggerData = NSKeyedArchiver.archivedData(withRootObject: self.triggerList)
+        self.defaultSettings.set(encodedTriggerData, forKey: "triggerList")
+        print("XMR Ticker \(NSDate()): saving alerts data:\(encodedTriggerData)")
         print("XMR Ticker \(NSDate()): terminating application")
         NSApplication.shared().terminate(self)
     }
