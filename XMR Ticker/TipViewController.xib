@@ -21,7 +21,7 @@
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Bws-FW-vGI">
                     <rect key="frame" x="119" y="235" width="242" height="34"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="Thank you for using XMR Ticker v2.1!" id="08X-k2-q53">
+                    <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="Thank you for using XMR Ticker v2.5!" id="08X-k2-q53">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
