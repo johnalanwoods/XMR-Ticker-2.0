@@ -1,5 +1,5 @@
-# XMR-Ticker-2.1
-XMR Ticker 2.1
+# XMR-Ticker-2.5
+XMR Ticker 2.5
 
 A ticker application for the macOS statusbar written in Swift, which tracks the price of Monero.
 * New icon! (Provided by /u/peanutsformonkeys)
@@ -11,3 +11,4 @@ A ticker application for the macOS statusbar written in Swift, which tracks the 
 * BTC prices are neatly rounded to 6 dp
 * There is a completely new alert/trigger system, so you can set alerts to show in Notification Centre when the price hits certain values! <— Took a while to implement!
 * Portfolio tracking in USD! (XMR Ticker shows your total balance in USD after you tell it how many coins you have)
+* Everything Saves! Including Alerts that are set. Automatically whenever the app is quit 👍
