@@ -30,19 +30,19 @@
                     </textFieldCell>
                 </textField>
                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jZN-fP-slb">
-                    <rect key="frame" x="255" y="352" width="131" height="24"/>
+                    <rect key="frame" x="232" y="352" width="154" height="24"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Ga3-M8-ykh">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment label="&gt;" width="41"/>
-                            <segment label="=" width="41" selected="YES" tag="1"/>
-                            <segment label="&lt;" width="41"/>
+                            <segment label="&gt;" width="49"/>
+                            <segment label="=" width="49" selected="YES" tag="1"/>
+                            <segment label="&lt;" width="48"/>
                         </segments>
                     </segmentedCell>
                 </segmentedControl>
                 <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dOn-BN-2Gs">
-                    <rect key="frame" x="257" y="328" width="127" height="22"/>
+                    <rect key="frame" x="234" y="328" width="150" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="0.00" drawsBackground="YES" allowsEditingTextAttributes="YES" id="obl-0Y-UCA">
                         <font key="font" metaFont="system"/>
@@ -51,15 +51,15 @@
                     </textFieldCell>
                 </textField>
                 <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Doz-a0-PUT">
-                    <rect key="frame" x="257" y="376" width="130" height="26"/>
+                    <rect key="frame" x="234" y="376" width="153" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="XMR/USD" placeholderString="XMR/USD" drawsBackground="YES" numberOfVisibleItems="2" id="Shc-v3-jjI">
+                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="XMR/BTC" placeholderString="XMR/BTC" drawsBackground="YES" numberOfVisibleItems="2" id="Shc-v3-jjI">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         <objectValues>
-                            <string>XMR/USD</string>
                             <string>XMR/BTC</string>
+                            <string>XMR/USD</string>
                         </objectValues>
                     </comboBoxCell>
                 </comboBox>
@@ -90,19 +90,8 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cYA-3c-1TN">
-                    <rect key="frame" x="272" y="13" width="118" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="18k-jI-kSj">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="doneButtonClicked:" target="-2" id="MT0-me-av6"/>
-                    </connections>
-                </button>
                 <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" findBarPosition="aboveHorizontalRuler" translatesAutoresizingMaskIntoConstraints="NO" id="WWu-6d-Gcd">
-                    <rect key="frame" x="9" y="49" width="386" height="271"/>
+                    <rect key="frame" x="9" y="7" width="386" height="271"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <clipView key="contentView" ambiguous="YES" id="VlX-SZ-agm">
                         <rect key="frame" x="0.0" y="0.0" width="386" height="271"/>
@@ -232,8 +221,19 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </tableHeaderView>
                 </scrollView>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kJT-9N-ckc">
+                    <rect key="frame" x="228" y="292" width="81" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5OW-5y-smq">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="removeButtonClicked:" target="-2" id="vfK-0y-c32"/>
+                    </connections>
+                </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CkY-Op-1vP">
-                    <rect key="frame" x="14" y="13" width="81" height="32"/>
+                    <rect key="frame" x="309" y="292" width="81" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2TJ-zU-kPi">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -246,19 +246,8 @@ Gw
                         <action selector="addButtonClicked:" target="-2" id="msn-vT-jdO"/>
                     </connections>
                 </button>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kJT-9N-ckc">
-                    <rect key="frame" x="95" y="13" width="81" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5OW-5y-smq">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="removeButtonClicked:" target="-2" id="vfK-0y-c32"/>
-                    </connections>
-                </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iny-rA-LUp">
-                    <rect key="frame" x="176" y="13" width="81" height="32"/>
+                    <rect key="frame" x="14" y="292" width="81" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Clear" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GQA-K1-4xD">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

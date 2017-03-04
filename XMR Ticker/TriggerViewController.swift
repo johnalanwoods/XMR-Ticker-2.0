@@ -43,10 +43,6 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
             self.triggerListTableView.reloadData()
         }
     }
-    
-    @IBAction func doneButtonClicked(_ sender: NSButton) {
-        self.view.window?.close()
-    }
 
 
     override func viewDidLoad() {
