@@ -1,12 +1,10 @@
 # XMR-Ticker-2.6
-XMR Ticker 2.6
-
 A ticker application for the macOS statusbar written in Swift, which tracks the price of Monero.
+
+XMR Ticker 2.6
 * Silent mode, so you get alerts without having to know every minor price movement.
 
 XMR Ticker 2.5
-
-A ticker application for the macOS statusbar written in Swift, which tracks the price of Monero.
 * New icon! (Provided by /u/peanutsformonkeys)
 * Now uses system font, so it’s nicely aligned with the other status bar elements
 * XMR/BTC, XMR/USD symbols used rather than USD/XMR, BTC/XMR - aesthetic but important
