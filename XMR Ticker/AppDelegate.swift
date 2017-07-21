@@ -114,7 +114,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.priceStreamer?.restartStream()
         }
     }
-
+    
+    //silent mode
+    var silentModeEnabled = false
+    @IBOutlet weak var silentModeButton: NSMenuItem!
+    @IBAction func silentModeButtonClicked(_ sender: NSMenuItem) {
+        print("XMR Ticker \(NSDate()): silent mode toggled")
+        
+        if(sender.state  == NSOffState)
+        {
+            self.silentModeEnabled  = true
+            self.silentModeButton.state = NSOnState
+        }
+        else{
+            self.silentModeEnabled = false
+            self.silentModeButton.state = NSOffState
+        }
+        if (sender.action != nil)
+        {
+            self.defaultSettings.set(sender.state, forKey: "silent")
+            self.priceStreamer?.restartStream()
+        }
+    }
+    
+    
+    
     //frequecy settings
     @IBOutlet weak var fifteenSecondFreqButton: NSMenuItem!
     @IBOutlet weak var thirtySecondFreqButton: NSMenuItem!
@@ -278,6 +302,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
             self.coloredSymbolsButtonClicked(enabled)
         }
         
+        //restore silent
+        let silentSettings = self.defaultSettings.bool(forKey: "silent")
+        switch silentSettings {
+        case false:
+            break
+        case true:
+            let enabled = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+            enabled.state = NSOffState
+            self.silentModeButtonClicked(enabled)
+        }
+        
         //restore frequency
         if let frequencySettings = self.defaultSettings.string(forKey: "updateFrequency")
         {
@@ -407,6 +442,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
                 }
             }
             //process new data
+            if(self.silentModeEnabled)
+            {
+                updatedPriceString = "Tracking XMR Price..."
+            }
             self.setAppropriateTextColor(updatedPriceString)
             self.processTriggers()
             self.processPortfolio()

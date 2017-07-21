@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1211" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1510" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
     </dependencies>
@@ -18,6 +18,7 @@
                 <outlet property="coloredSymbolsButton" destination="M26-bh-nlZ" id="8Ah-uh-aAE"/>
                 <outlet property="fifteenSecondFreqButton" destination="XdZ-0f-7UE" id="Uaz-I3-L2G"/>
                 <outlet property="portfolioButton" destination="9Cv-Df-bEU" id="kIl-mb-2wF"/>
+                <outlet property="silentModeButton" destination="FDg-7L-0t3" id="BkI-Wh-tk3"/>
                 <outlet property="sixtySecondFreqButton" destination="LdP-E2-Ahm" id="M1Q-AT-WP7"/>
                 <outlet property="thirtySecondFreqButton" destination="NOh-3p-KO0" id="gnO-c2-YdF"/>
                 <outlet property="tickerMenu" destination="viT-bl-jPf" id="rbj-ag-paR"/>
@@ -43,6 +44,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="coloredSymbolsButtonClicked:" target="Voe-Tx-rLC" id="Rdv-g4-M8y"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Silent Mode" id="FDg-7L-0t3" userLabel="Silent Mode Button">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="silentModeButtonClicked:" target="Voe-Tx-rLC" id="N1w-g8-pJj"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Terms" id="frt-1Y-aAN">
