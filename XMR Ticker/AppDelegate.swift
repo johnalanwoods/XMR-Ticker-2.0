@@ -18,7 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
     //portfolio tracking settings
     var portfolioIsTracked:Bool = false
     var portfolioCoinCount:Double = 0.00
-    
+    let numberFormatter = NumberFormatter()
+
     //global array of trigger/alert models
     var triggerList:[Trigger] = [Trigger]()
     var indexesToRemove: [Int] = [Int]()
@@ -255,6 +256,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         //perfect alignment adjustment
         self.statusBarItem.button?.frame = CGRect(x:0.0, y:1.0, width:self.statusBarItem.button!.frame.width, height:self.statusBarItem.button!.frame.height)
         
+        //numberFormatter
+        self.numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        self.numberFormatter.minimumFractionDigits = 2
+        self.numberFormatter.maximumFractionDigits = 2
+        self.numberFormatter.roundingMode = .up
+        
         //load saved settings
         self.restoreSettingsState()
 
@@ -419,17 +426,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         
         var updatedPriceString:String = String()
         
-        //do ui updates on main thread gcd call
+        //do UI updates on main thread gcd call
         DispatchQueue.main.async(execute: {
             switch self.displayTerms {
             case .usd:
                 if (self.coinSymbolsEnabled == true)
                 {
-                    updatedPriceString = "ɱ $\(self.currentQuote.notionalValues!["usd"]!.string(fractionDigits: 2))"
+                    if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:self.currentQuote.notionalValues!["usd"]!))
+                    {
+                        updatedPriceString = "ɱ $\(commaFormattedNumberString)"
+                    }
                 }
                 else
                 {
-                    updatedPriceString = "XMR/USD $\(self.currentQuote.notionalValues!["usd"]!.string(fractionDigits: 2))"
+                    if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:self.currentQuote.notionalValues!["usd"]!))
+                    {
+                        updatedPriceString = "XMR/USD $\(commaFormattedNumberString)"
+                    }
                 }
             case .btc:
                 if (self.coinSymbolsEnabled == true)
@@ -457,7 +470,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
         if (self.portfolioIsTracked)
         {
             let portfolioValue = self.portfolioCoinCount*self.currentQuote.notionalValues!["usd"]!
-            self.portfolioButton.title = "Portfolio ($\(portfolioValue.string(fractionDigits: 2)))"
+            if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:portfolioValue))
+            {
+                self.portfolioButton.title = "Portfolio ($\(commaFormattedNumberString))"
+            }
         }
         else
         {
@@ -538,21 +554,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, PriceListener, TriggerArrayR
                     case .greaterThan:
                         if(self.currentQuote.notionalValues!["usd"]! > trigger.triggerValue)
                         {
-                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now > $\(trigger.triggerValue.string(fractionDigits: 2)). Occured @ \(NSDate())")
-                            indexesToRemove.append(index)
+                            if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:trigger.triggerValue))
+                            {
+                                self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now > $\(commaFormattedNumberString). Occured @ \(NSDate())")
+                                indexesToRemove.append(index)
+                            }
                         }
                     case .lessThan:
                         if(self.currentQuote.notionalValues!["usd"]! < trigger.triggerValue)
                         {
-                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now < $\(trigger.triggerValue.string(fractionDigits: 2)). Occured @ \(NSDate())")
-                            indexesToRemove.append(index)
+                            if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:trigger.triggerValue))
+                            {
+                                self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now < $\(commaFormattedNumberString). Occured @ \(NSDate())")
+                                indexesToRemove.append(index)
+                            }
 
                         }
                     case .equalTo:
                         if(self.currentQuote.notionalValues!["usd"]! == trigger.triggerValue)
                         {
-                            self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now = $\(trigger.triggerValue.string(fractionDigits: 2)). Occured @ \(NSDate())")
-                            indexesToRemove.append(index)
+                            if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:trigger.triggerValue))
+                            {
+                                self.postTriggerNotification(title: title, body: "\(trigger.counterCurrency.rawValue) trigger hit, \(trigger.baseCurrency.rawValue)/\(trigger.counterCurrency.rawValue) now = $\(commaFormattedNumberString). Occured @ \(NSDate())")
+                                indexesToRemove.append(index)
+                            }
                         }
                     }
                 case .btc:

@@ -19,6 +19,9 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
     //delegate
     weak var delegate:TriggerArrayReceiver?
     
+    //numberFormatter
+    let numberFormatter = NumberFormatter()
+    
     //model
     var localTriggerList:[Trigger] = [Trigger]()
     //tableview
@@ -48,6 +51,12 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
     override func viewDidLoad() {
         self.triggerListTableView.delegate = self
         self.triggerListTableView.dataSource = self
+        
+        //numberFormatter
+        self.numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        self.numberFormatter.minimumFractionDigits = 2
+        self.numberFormatter.maximumFractionDigits = 2
+        self.numberFormatter.roundingMode = .up
         
         self.triggerValueTextField.delegate = self
         super.viewDidLoad()
@@ -80,7 +89,10 @@ class TriggerViewController: NSViewController, NSTableViewDelegate, NSTableViewD
                 cellText = "\(self.localTriggerList[row].triggerValue) BTC"
             }
             else{
-                cellText = "$\(self.localTriggerList[row].triggerValue.string(fractionDigits: 2))"
+                if let commaFormattedNumberString = self.numberFormatter.string(from: NSNumber(value:self.localTriggerList[row].triggerValue))
+                {
+                    cellText = "$\(commaFormattedNumberString)"
+                }
             }
             cellIdentifier = "TriggerCell"
         }
